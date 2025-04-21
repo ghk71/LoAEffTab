@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>CSV 업로더</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background: #f9f9f9;
+    }
+    textarea {
+      width: 100%;
+      height: 300px;
+      font-family: monospace;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .status {
+      margin-top: 15px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>CSV 파일 수정기</h1>
+  <p>아래 텍스트박스에서 CSV 내용을 수정한 후, <b>Upload</b> 버튼을 눌러 GitHub 저장소의 <code>data.csv</code>를 업데이트하세요.</p>
+
+  <textarea id="csv-text">로딩 중...</textarea>
+  <br>
+  <button onclick="uploadCSV()">Upload</button>
+
+  <div class="status" id="status"></div>
+
+  <script>
+    const GITHUB_RAW_URL = "https://raw.githubusercontent.com/너의GitHubID/너의Repo명/main/data.csv";
+    const WORKER_ENDPOINT = "https://github-uploader.너의서브도메인.workers.dev"; // Cloudflare Worker 주소
+
+    // 초기 로드 시 CSV 내용 가져오기
+    fetch(GITHUB_RAW_URL)
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById("csv-text").value = data;
+      })
+      .catch(err => {
+        document.getElementById("csv-text").value = "CSV 로드 실패: " + err;
+      });
+
+    // Upload 버튼 클릭 시
+    async function uploadCSV() {
+      const content = document.getElementById("csv-text").value;
+      document.getElementById("status").textContent = "업로드 중...";
+
+      try {
+        const res = await fetch(WORKER_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ content })
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+          document.getElementById("status").textContent = "✅ 업로드 완료!";
+        } else {
+          document.getElementById("status").textContent = "❌ 오류: " + result.message;
+        }
+      } catch (err) {
+        document.getElementById("status").textContent = "❌ 요청 실패: " + err;
+      }
+    }
+  </script>
+
+</body>
+</html>
