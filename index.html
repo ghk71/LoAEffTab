@@ -1,35 +1,80 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head><meta charset="UTF-8"><title>CSV 편집기</title></head>
+<head>
+  <meta charset="UTF-8" />
+  <title>로아 효율표 시스템</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard&display=swap" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script defer src="efficiencyTable.js"></script>
+  <script defer src="loadCharacter.js"></script>
+  <script defer src="updatePrice.js"></script>
+</head>
 <body>
-  <button id="load">불러오기</button>
-  <button id="save">저장하기</button><br>
-  <textarea id="csv" style="width:100%;height:300px"></textarea>
+  <div id="app">
+    <h1 class="title">로아 효율표 시스템</h1>
+
+    <div class="top-bar">
+      <div class="tab active" data-tab="efficiency">효율표</div>
+      <div class="tab" data-tab="roster">로펙점수</div>
+      <div class="tab" data-tab="character">캐릭설정</div>
+      <div class="tab" data-tab="database">Database</div>
+
+      <div class="apikey-wrapper">
+        <label for="apikey">APIKey</label>
+        <input type="text" id="apikey" placeholder="여기에 입력" />
+      </div>
+    </div>
+
+    <div class="tab-content" id="content-efficiency">
+      <div id="character-panel">
+        <div class="character-search">
+          <label for="charName">캐릭터명</label>
+          <input id="charName" type="text" />
+          <button onclick="loadCharacter()">검색</button>
+        </div>
+        <div class="character-stats" id="characterStats">
+          <!-- 캐릭터 스펙 표 렌더링 위치 -->
+        </div>
+      </div>
+
+      <div id="efficiency-table-wrapper">
+        <!-- 효율표 테이블 위치 -->
+      </div>
+    </div>
+
+    <div class="tab-content" id="content-roster" style="display: none;">
+      <!-- rosterScore.js 가 처리 -->
+    </div>
+
+    <div class="tab-content" id="content-character" style="display: none;">
+      <!-- characterSettings.js 가 처리 -->
+    </div>
+
+    <div class="tab-content" id="content-database" style="display:none;">
+      <!-- updatePrice.js 가 자동으로 테이블 + 버튼을 렌더링 -->
+    </div>
+  </div>
 
   <script>
-    const STATIC_CSV = 'https://ghk71.github.io/LoAEffTab.github.io/data/data.csv'
-    const WORKER_API = 'https://loaefftab.vfgtr8746.workers.dev/'
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
 
-    document.getElementById('load').onclick = async () => {
-      try {
-        const r = await fetch(STATIC_CSV)
-        document.getElementById('csv').value = await r.text()
-      } catch (e) { alert('CSV 로드 실패') }
-    }
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        contents.forEach(c => c.style.display = "none");
+        tab.classList.add("active");
+        document.getElementById(`content-${tab.dataset.tab}`).style.display = "flex";
+      });
+    });
 
-    document.getElementById('save').onclick = async () => {
-      const txt = document.getElementById('csv').value
-      const b64 = btoa(unescape(encodeURIComponent(txt)))
-      const r = await fetch(WORKER_API, {
-        method: 'POST',
-        mode: 'cors',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify({ content: b64 })
-      })
-      const j = await r.json()
-      if (j.commit) alert('업데이트 완료: ' + j.commit.sha)
-      else          alert('오류: ' + JSON.stringify(j))
-    }
+    // API KEY 저장
+    const apikeyInput = document.getElementById("apikey");
+    apikeyInput.value = localStorage.getItem("supabase_apikey") || "";
+    apikeyInput.addEventListener("input", () => {
+      localStorage.setItem("supabase_apikey", apikeyInput.value);
+    });
   </script>
 </body>
 </html>
