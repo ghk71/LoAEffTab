@@ -136,3 +136,6 @@ th.sortable.desc::after{content:"🔽"}
   filter:grayscale(.7);cursor:progress;opacity:.7;
 }
 
+#charactherBtn:disabled{
+  filter:grayscale(.7);cursor:progress;opacity:.7;
+}

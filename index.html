@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <title>로아 효율표 시스템</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard&display=swap" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="css/style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-  <script defer src="efficiencyTable.js"></script>
-  <script defer src="loadCharacter.js"></script>
-  <script defer src="updatePrice.js"></script>
+  <script defer src="js/efficiencyTable.js"></script>
+  <script defer src="js/loadCharacter.js"></script>
+  <script defer src="js/updatePrice.js"></script>
 </head>
 <body>
   <div id="app">
@@ -31,7 +31,7 @@
         <div class="character-search">
           <label for="charName">캐릭터명</label>
           <input id="charName" type="text" />
-          <button onclick="loadCharacter()">검색</button>
+          <button id="charactherBtn" onclick="loadCharacterInformation()">검색</button>
         </div>
         <div class="character-stats" id="characterStats">
           <!-- 캐릭터 스펙 표 렌더링 위치 -->
