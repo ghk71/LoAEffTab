@@ -88,7 +88,9 @@ function updateCharacterData(data) {
   const engravingArr = data.ArmoryEngraving?.ArkPassiveEffects || [];
   const karmaArr = data.ArkPassive?.Points || [];
   const braceletData = equipmentArr[12];
-  console.log(braceletData);
+  const avatarData = data.ArmoryAvatars;
+  
+  parseJSON(braceletData.Tooltip);
 
   characterData.info = {
     name: profile.CharacterName,
@@ -202,26 +204,48 @@ function updateCharacterData(data) {
     if (idxMap[p.Name] != null) characterData.karma.levels[idxMap[p.Name]] = p.Value;
   });
 
-  const rawBrace =
-    JSON.parse(braceletData?.Tooltip || "{}").Element_004?.value?.Element_001 || "";
-  let brLines = rawBrace
-    .split(/<BR>/i)
-    .map(utils.stripTags)
-    .filter((l) => l && !l.includes("적용되지 않는다"));
-  if (brLines.length > 5) {
-    const first = brLines.slice(0, 2);
-    const rest = brLines.slice(2);
-    const grouped = [];
-    for (let i = 0; i < rest.length; i += 2) {
-      if (rest[i + 1] != null) grouped.push(rest[i] + " " + rest[i + 1]);
-      else grouped.push(rest[i]);
-    }
-    brLines = [...first, ...grouped];
-  }
-  brLines = brLines.slice(0, 5);
-  ["option1", "option2", "option3", "option4", "option5"].forEach((k, i) => {
-    characterData.bracelet[k] = brLines[i] || null;
+  const rawBrace = JSON.parse(braceletData?.Tooltip || "{}").Element_004?.value?.Element_001 || "";
+  console.log(rawBrace);
+
+  // <img> 기준으로 split → 효과 텍스트 추출
+  const segments = rawBrace.split(/<img[^>]*>/i);
+  segments.shift(); // 첫 segment는 빈 문자열이므로 제거
+
+  const effects = segments
+    .map((segment) =>
+      segment
+        .split(/<br\s*\/?>/i)
+        .map(utils.stripTags)
+        .map((s) => s.trim())
+        .filter((s) => !!s && !s.includes("적용되지 않는다"))
+        .join(" ")
+    )
+    .filter(Boolean)
+    .slice(0, 5);
+
+  // 기존 object 유지한 채 key 동적 할당만큼만 유지
+  characterData.bracelet = {};
+  effects.forEach((effect, i) => {
+    characterData.bracelet[`option${i + 1}`] = effect;
   });
+
+  const avatarPartMap = {
+    "머리 아바타": 0,
+    "견갑 아바타": 1,
+    "상의 아바타": 2,
+    "하의 아바타": 3,
+    "장갑 아바타": 4,
+    "무기 아바타": 5,
+  };
+
+  const avatarParts = Array(6).fill("-");
+  avatarData.forEach((item) => {
+    if (item.Grade === "전설") {
+      const idx = avatarPartMap[item.Type];
+      if (idx != null) avatarParts[idx] = "전설";
+    }
+  });
+  characterData.equipment.avatar = avatarParts;
 
   drawCharacterData();
 }
