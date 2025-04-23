@@ -88,6 +88,7 @@ function updateCharacterData(data) {
   const engravingArr = data.ArmoryEngraving?.ArkPassiveEffects || [];
   const karmaArr = data.ArkPassive?.Points || [];
   const braceletData = equipmentArr[12];
+  console.log(braceletData);
 
   characterData.info = {
     name: profile.CharacterName,
