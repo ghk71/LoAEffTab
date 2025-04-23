@@ -421,6 +421,8 @@ function computeKarmaLevels() {
 }
 
 function updateCharacterData(data) {
+  console.log(data);
+  
   const profile = data.ArmoryProfile;
   updateProfile(profile);
 
