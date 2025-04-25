@@ -1,21 +1,27 @@
-const fetch = require("node-fetch");
+const https = require('https');
 
-exports.handler = async function (event, context) {
-  const targetUrl = "https://loatool.taeu.kr/lospi"; // 네가 긁고 싶은 URL
-  try {
-    const response = await fetch(targetUrl);
-    const body = await response.text();
-    return {
-      statusCode: 200,
-      body,
-      headers: {
-        "Content-Type": "text/html"
-      }
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: error.message })
-    };
-  }
+exports.handler = async function(event, context) {
+  const targetUrl = 'https://loatool.taeu.kr/lospi';
+
+  return new Promise((resolve, reject) => {
+    https.get(targetUrl, (res) => {
+      let data = '';
+
+      res.on('data', (chunk) => data += chunk);
+      res.on('end', () => {
+        resolve({
+          statusCode: 200,
+          body: data,
+          headers: {
+            'Content-Type': 'text/html',
+          }
+        });
+      });
+    }).on('error', (err) => {
+      reject({
+        statusCode: 500,
+        body: JSON.stringify({ error: err.message }),
+      });
+    });
+  });
 };
