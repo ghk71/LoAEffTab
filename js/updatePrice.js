@@ -29,7 +29,7 @@ const dealerEngravingData = [
 ].map(n => ({ name: `${n} 각인서`, price: null }));
 
 const supportEngravingData = [
-  "마나의 흐름","전문의","각성","구슬동자","중갑 착용","급소 타격","최대마나증가","폭발물전문가"
+  "마나의 흐름","전문의","각성","구슬동자","중갑 착용","급소 타격","최대 마나 증가","폭발물 전문가"
 ].map(n => ({ name: `${n} 각인서`, price: null }));
 
 // 경매장(보석)
