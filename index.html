@@ -16,18 +16,19 @@
   <div id="app">
     <h1 class="title">로아 효율표 시스템</h1>
 
+    <!-- Top Bar -->
     <div class="top-bar">
       <div class="tab active" data-tab="efficiency">효율표</div>
       <div class="tab" data-tab="roster">로펙점수</div>
       <div class="tab" data-tab="character">캐릭설정</div>
       <div class="tab" data-tab="database">Database</div>
-
       <div class="apikey-wrapper">
         <label for="apikey">APIKey</label>
-        <input type="text" id="apikey" placeholder="여기에 입력" />
+        <input id="apikey" type="text" placeholder="여기에 입력" />
       </div>
     </div>
 
+    <!-- 효율표 탭 -->
     <div class="tab-content" id="content-efficiency">
       <div id="character-panel">
         <div class="character-search">
@@ -35,48 +36,104 @@
           <input id="charName" type="text" />
           <button id="charactherBtn" onclick="loadCharacterInformation()">검색</button>
         </div>
-        <div class="character-stats" id="characterStats">
-          <!-- 캐릭터 스펙 표 렌더링 위치 -->
+        <div class="character-stats" id="characterStats"></div>
+      </div>
+      <div id="efficiency-table-wrapper"></div>
+    </div>
+
+    <!-- 로펙점수 탭 -->
+    <div class="tab-content" id="content-roster" style="display:none;"></div>
+
+    <!-- 캐릭설정 탭 -->
+    <div class="tab-content" id="content-character" style="display:none;"></div>
+
+    <!-- Database 탭 (변경된 레이아웃 유지) -->
+    <div class="tab-content" id="content-database" style="display:none;">
+      <!-- 시장 가격 그룹 -->
+      <div class="data-group">
+        <div class="group-header">
+          <h3 class="group-title">시장 가격</h3>
+          <button id="btn-update-all" class="update-btn">Update Price</button>
+        </div>
+        <div id="top-categories">
+          <div class="data-table">
+            <h4>📦 재료</h4>
+            <table id="tbl-materials"></table>
+          </div>
+          <div class="data-table">
+            <h4>📜 딜러 각인서</h4>
+            <table id="tbl-dealer-engrave"></table>
+          </div>
+          <div class="data-table">
+            <h4>📜 서포터 각인서</h4>
+            <table id="tbl-support-engrave"></table>
+          </div>
+          <div class="data-table">
+            <h4>💎 보석</h4>
+            <table id="tbl-gems"></table>
+          </div>
         </div>
       </div>
-
-      <div id="efficiency-table-wrapper">
-        <!-- 효율표 테이블 위치 -->
+      <hr class="market-separator" />
+      <div id="bottom-sections">
+        <div class="accessory-section">
+          <div class="group-header">
+            <h3 class="group-title">딜러 악세서리</h3>
+            <button id="btn-update-dealer" class="update-btn">업데이트</button>
+          </div>
+          <div class="data-table">
+            <h4>🔗 목걸이</h4>
+            <table id="tbl-dealer-neck"></table>
+          </div>
+          <div class="data-table">
+            <h4>🧿 귀걸이</h4>
+            <table id="tbl-dealer-ear"></table>
+          </div>
+          <div class="data-table">
+            <h4>💍 반지</h4>
+            <table id="tbl-dealer-ring"></table>
+          </div>
+        </div>
+        <div class="accessory-section">
+          <div class="group-header">
+            <h3 class="group-title">서포터 악세서리</h3>
+            <button id="btn-update-support" class="update-btn">업데이트</button>
+          </div>
+          <div class="data-table">
+            <h4>🔗 목걸이</h4>
+            <table id="tbl-support-neck"></table>
+          </div>
+          <div class="data-table">
+            <h4>🧿 귀걸이</h4>
+            <table id="tbl-support-ear"></table>
+          </div>
+          <div class="data-table">
+            <h4>💍 반지</h4>
+            <table id="tbl-support-ring"></table>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div class="tab-content" id="content-roster" style="display: none;">
-      <!-- rosterScore.js 가 처리 -->
-    </div>
-
-    <div class="tab-content" id="content-character" style="display: none;">
-      <!-- characterSettings.js 가 처리 -->
-    </div>
-
-    <div class="tab-content" id="content-database" style="display:none;">
-      <!-- updatePrice.js 가 자동으로 테이블 + 버튼을 렌더링 -->
     </div>
   </div>
 
   <script>
-    const tabs = document.querySelectorAll(".tab");
-    const contents = document.querySelectorAll(".tab-content");
-
+    // 탭 전환
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
     tabs.forEach(tab => {
-      tab.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        contents.forEach(c => c.style.display = "none");
-        tab.classList.add("active");
-        document.getElementById(`content-${tab.dataset.tab}`).style.display = "flex";
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        contents.forEach(c => c.style.display = 'none');
+        tab.classList.add('active');
+        document.getElementById(`content-${tab.dataset.tab}`).style.display = 'flex';
       });
     });
-
-    // API KEY 저장
-    const apikeyInput = document.getElementById("apikey");
-    apikeyInput.value = localStorage.getItem("supabase_apikey") || "";
-    apikeyInput.addEventListener("input", () => {
-      localStorage.setItem("supabase_apikey", apikeyInput.value);
-    });
+    // APIKey 저장
+    const apikeyInput = document.getElementById('apikey');
+    apikeyInput.value = localStorage.getItem('supabase_apikey') || '';
+    apikeyInput.addEventListener('input', () =>
+      localStorage.setItem('supabase_apikey', apikeyInput.value)
+    );
   </script>
 </body>
 </html>
