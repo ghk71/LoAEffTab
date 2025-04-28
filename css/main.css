@@ -1,0 +1,83 @@
+/* ─────────── Reset & Base ─────────── */
+body {
+  margin: 0;
+  font-family: 'Pretendard', sans-serif;
+  background: #0d4f66;
+  color: #fff;
+}
+#app { padding: 20px; }
+.title {
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+/* ─────────── Top Bar & Tabs ─────────── */
+.top-bar {
+  display: flex; align-items: center;
+  background: #002f40; border-radius: 8px;
+  margin-bottom: 20px; overflow: hidden;
+}
+.tab {
+  padding: 12px 20px; cursor: pointer;
+  background: #00546e; color: #fff;
+  transition: background .2s;
+}
+.tab:hover { background: #007f9d; }
+.tab.active { background: #ff3b3b; font-weight: bold; }
+
+.apikey-wrapper {
+  margin-left: auto; display: flex;
+  align-items: center; gap: 10px; padding: 0 12px;
+}
+.apikey-wrapper input {
+  padding: 6px 10px; border: none;
+  border-radius: 4px; font-size: 14px;
+}
+
+/* ─────────── Tab Content 공통 ─────────── */
+.tab-content {
+  display: flex;
+  flex-direction: column;   /* 기본은 column */
+  gap: 20px;
+  background: #004b5a;
+  padding: 20px;
+  border-radius: 8px;
+  min-height: 600px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* ─────────── Common Table ─────────── */
+table {
+  width:100%; border-collapse:collapse;
+  margin-top:16px;
+  background:#0e667f;
+  border-radius:8px;
+  overflow:hidden;
+}
+th, td {
+  padding:10px 12px;
+  text-align:center;
+  border:1px solid #1b7e99;
+  color:#fff;
+}
+th   { background:#1986a3; font-weight:bold; }
+td   { background:#13788f; }
+tr:nth-child(even) td { background:#106e83; }
+
+/* ─────────── Update Button ─────────── */
+.update-btn {
+  padding: 8px 16px;
+  font-size: 14px;
+  background: linear-gradient(135deg, #ff7777 0%, #ff354d 100%);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 3px 6px rgba(0,0,0,.25);
+  transition: filter .2s, transform .1s;
+}
+.update-btn:hover {
+  filter: brightness(1.05);
+  transform: translateY(-1px);
+}

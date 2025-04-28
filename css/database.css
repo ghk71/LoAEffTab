@@ -1,0 +1,64 @@
+/* ─────────── Data Group (시장 가격) ─────────── */
+.data-group {
+  background: #07566e;
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+}
+.group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.group-title {
+  margin: 0;
+  font-size: 18px;
+  color: #fff;
+  border-bottom: 1px solid #12708e;
+  padding-bottom: 8px;
+}
+#top-categories {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 12px;
+}
+#top-categories .data-table {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.data-table h4 {
+  margin: 0;
+  font-size: 16px;
+  color: #fff;
+}
+.market-separator {
+  border: 0;
+  border-top: 1px solid #12708e;
+  width: 100%;
+  margin: 0;
+}
+
+/* ─────────── Accessory Sections ─────────── */
+#bottom-sections {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
+.accessory-section {
+  flex: 1;
+  background: #07566e;
+  border-radius: 8px;
+  padding: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.accessory-section .group-header {
+  margin-bottom: 12px;
+}

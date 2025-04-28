@@ -3,22 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <title>로아 효율표 시스템</title>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pretendard&display=swap" />
-  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/efficiency.css" />
+  <link rel="stylesheet" href="css/character.css" />
+  <link rel="stylesheet" href="css/database.css" />
+  <link rel="stylesheet" href="css/roster.css" />
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
+  <!-- 가격 업데이트 -->
   <script defer src="js/updatePrice/updatePrice.js"></script>
   <script defer src="js/updatePrice/updateMarketItems.js"></script>
   <script defer src="js/updatePrice/updateGems.js"></script>
   <script defer src="js/updatePrice/updateDealerAcc.js"></script>
   <script defer src="js/updatePrice/updateSupportAcc.js"></script>
 
-  <script defer src="js/efficiencyTable.js"></script>
-  <script defer src="js/loadCharacter.js"></script>
-  
-  <script defer src="js/data.js"></script>
-  <script defer src="js/test.js"></script>
-  <script defer src="js/utils.js"></script>
+  <!-- 효율표 -->
+  <script defer src="js/efficiency/efficiencyTable.js"></script>
+
+  <!-- 캐릭터 로드 -->
+  <script defer src="js/loadCharacter/loadCharacter.js"></script>
+  <script defer src="js/loadCharacter/updateCharacter.js"></script>
+  <script defer src="js/loadCharacter/updateCharacterEquipment.js"></script>
+  <script defer src="js/loadCharacter/updateCharacterAccessary.js"></script>
+  <script defer src="js/loadCharacter/updateOtherInformation.js"></script>
+
+  <!-- 디버깅 -->
+  <script defer src="js/debug/test.js"></script>
 </head>
 <body>
   <div id="app">
@@ -57,9 +68,8 @@
     <!-- 캐릭설정 탭 -->
     <div class="tab-content" id="content-character" style="display:none;"></div>
 
-    <!-- Database 탭 (변경된 레이아웃 유지) -->
+    <!-- Database 탭 -->
     <div class="tab-content" id="content-database" style="display:none;">
-      <!-- 시장 가격 그룹 -->
       <div class="data-group">
         <div class="group-header">
           <h3 class="group-title">시장 가격</h3>
@@ -144,6 +154,13 @@
     apikeyInput.addEventListener('input', () =>
       localStorage.setItem('supabase_apikey', apikeyInput.value)
     );
+
+    document.getElementById('charName')
+    .addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        loadCharacterInformation();
+      }
+    });
   </script>
 </body>
 </html>
