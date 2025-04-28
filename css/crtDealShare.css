@@ -1,0 +1,73 @@
+/* ────────────────────────────────────────── */
+/* 캐릭터 딜지분 설정 테이블 스타일 재정의 */
+/* ────────────────────────────────────────── */
+#crt-deal-share-table-wrapper {
+    /* flex 컨테이너 안에서 고정폭, margin으로 간격 */
+    flex: none;
+    width: 360px;
+    margin-right: 20px;
+  }
+  #crt-deal-share-table-wrapper .data-table {
+    background: #07566e;
+    border-radius: 8px;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  #crt-deal-share-table-wrapper .data-table h4 {
+    margin: 0 0 12px;
+    font-size: 16px;
+    color: #fff;
+    border-bottom: 1px solid #12708e;
+    padding-bottom: 8px;
+  }
+  /* 표 전체 레이아웃 */
+  #crt-deal-share-table-wrapper table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;           /* 고정 칸폭 */
+  }
+  /* 헤더 셀 */
+  #crt-deal-share-table-wrapper th {
+    background: #1986a3;
+    color: #fff;
+    font-size: 14px;
+    padding: 8px;
+    border-bottom: 2px solid #1b7e99;
+    word-break: keep-all;          /* 글자 잘림 최소화 */
+  }
+  /* 일반 셀 */
+  #crt-deal-share-table-wrapper td {
+    background: #0e667f;
+    color: #fff;
+    font-size: 13px;
+    padding: 8px;
+    border-bottom: 1px solid #1b7e99;
+    word-wrap: break-word;
+  }
+  /* 마지막 행 밑줄 없애기 */
+  #crt-deal-share-table-wrapper tr:last-child td {
+    border-bottom: none;
+  }
+  /* 컬럼별 비율 지정 */
+  #crt-deal-share-table-wrapper th:nth-child(1),
+  #crt-deal-share-table-wrapper td:nth-child(1) { width: 40%; } /* 스킬 */
+  #crt-deal-share-table-wrapper th:nth-child(2),
+  #crt-deal-share-table-wrapper td:nth-child(2) { width: 15%; } /* 레벨 */
+  #crt-deal-share-table-wrapper th:nth-child(3),
+  #crt-deal-share-table-wrapper td:nth-child(3) { width: 20%; } /* 종류 */
+  #crt-deal-share-table-wrapper th:nth-child(4),
+  #crt-deal-share-table-wrapper td:nth-child(4) { width: 25%; } /* 딜지분 */
+  /* 입력란 스타일 */
+  #crt-deal-share-table-wrapper input {
+    width: 80%;
+    padding: 4px 6px;
+    border: 1px solid #1986a3;
+    border-radius: 4px;
+    background: #fff;
+    color: #000;
+    font-size: 13px;
+    box-sizing: border-box;
+  }
+  

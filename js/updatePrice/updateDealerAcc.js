@@ -94,13 +94,25 @@ async function updateDealerAcc() {
       }
     }
 
-    // 테이블에는 itemAllowCount = 0 기준(TradeAllowCount ≥ 0) 최소가로 렌더
+    /*// 테이블에는 itemAllowCount = 0 기준(TradeAllowCount ≥ 0) 최소가로 렌더
     const rows = dealerAccData[0][slotKey].map(o => ({
       name: o.option,
       price: o.price
     }));
     renderZeroTable(tableId, [label, "가격"], rows);
+    */
+
+    const sel = parseInt(
+        document.querySelector(`input[name="dealer-${slotKey}-allow"]:checked`).value,
+        10
+      );
+      const rows = dealerAccData[sel][slotKey].map(o => ({
+        name: o.option,
+        price: o.price
+      }));
+    renderZeroTable(tableId, [label, "가격"], rows);
   }
 
   alert("딜러 악세 최저가 업데이트 완료!");
 }
+

@@ -116,11 +116,11 @@ document.addEventListener("DOMContentLoaded", () => {
   renderZeroTable("tbl-gems",            ["보석","가격"], gemData);
 
   renderZeroTable("tbl-dealer-neck", ["목걸이","가격"], dealerNeckless.map(n=>({ name:n, price:'-' })));
-  renderZeroTable("tbl-dealer-ear", ["귀걸이","가격"], dealerNeckless.map(n=>({ name:n, price:'-' })));
-  renderZeroTable("tbl-dealer-ring", ["반지","가격"], dealerNeckless.map(n=>({ name:n, price:'-' })));
+  renderZeroTable("tbl-dealer-ear", ["귀걸이","가격"], dealerEaring.map(n=>({ name:n, price:'-' })));
+  renderZeroTable("tbl-dealer-ring", ["반지","가격"], dealerRing.map(n=>({ name:n, price:'-' })));
   renderZeroTable("tbl-support-neck", ["목걸이","가격"], supportNeckless.map(n=>({ name:n, price:'-' })));
-  renderZeroTable("tbl-support-ear", ["귀걸이","가격"], supportNeckless.map(n=>({ name:n, price:'-' })));
-  renderZeroTable("tbl-support-ring", ["반지","가격"], supportNeckless.map(n=>({ name:n, price:'-' })));
+  renderZeroTable("tbl-support-ear", ["귀걸이","가격"], supportEaring.map(n=>({ name:n, price:'-' })));
+  renderZeroTable("tbl-support-ring", ["반지","가격"], supportRing.map(n=>({ name:n, price:'-' })));
 
   // 버튼 이벤트
   document.getElementById("btn-update-all")
@@ -129,4 +129,30 @@ document.addEventListener("DOMContentLoaded", () => {
     .addEventListener("click", () => { toggleBtn("btn-update-dealer", true); updateDealerAcc().finally(() => toggleBtn("btn-update-dealer", false)); });
   document.getElementById("btn-update-support")
     .addEventListener("click", () => { toggleBtn("btn-update-support", true); updateSupportAcc().finally(() => toggleBtn("btn-update-support", false)); });
+
+    ["neck","ear","ring"].forEach(slotKey => {
+      document.querySelectorAll(`input[name="dealer-${slotKey}-allow"]`)
+        .forEach(radio => radio.addEventListener("change", () => {
+          const sel = parseInt(radio.value, 10);
+          const { tableId, label } = DEALER_SLOT_META[slotKey];
+          const rows = dealerAccData[sel][slotKey].map(o => ({
+            name: o.option,
+            price: o.price
+          }));
+          renderZeroTable(tableId, [label, "가격"], rows);
+        }));
+    });
+
+    ["neck","ear","ring"].forEach(slotKey => {
+      document.querySelectorAll(`input[name="support-${slotKey}-allow"]`)
+        .forEach(radio => radio.addEventListener("change", () => {
+          const sel = parseInt(radio.value, 10);
+          const { tableId, label } = DEALER_SLOT_META[slotKey];
+          const rows = dealerAccData[sel][slotKey].map(o => ({
+            name: o.option,
+            price: o.price
+          }));
+          renderZeroTable(tableId, [label, "가격"], rows);
+        }));
+    });
 });

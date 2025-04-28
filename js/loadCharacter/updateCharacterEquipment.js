@@ -30,15 +30,34 @@ function updateCharacterEquipment(equipmentArr) {
 
     const type8 = tip.Element_008?.type;
     let transcIdx, elixAIdx, elixBIdx;
-    if (type8 === "progress") {
-      if (hasAdvEnhance) { transcIdx = 9;  elixAIdx = 10; elixBIdx = 11; }
-      else                { transcIdx = 8;  elixAIdx = 9;  elixBIdx = 10; }
-    } else if (type8 === "IndentStringGroup") {
-      transcIdx = 8;  elixAIdx = 9;  elixBIdx = 10;
+
+    if (idx === 5) { // 무기일 경우
+      const leftStr0 = e1.leftStr0 || "";
+      if (leftStr0.includes("에스더")) {
+        transcIdx = 9;  // 에스더 무기 -> 초월은 Element_009
+      } else {
+        if (type8 === "progress") {
+          if (hasAdvEnhance) { transcIdx = 9; }
+          else               { transcIdx = 8; }
+        } else if (type8 === "IndentStringGroup") {
+          transcIdx = 8; 
+        } else {
+          if (hasAdvEnhance) { transcIdx = 9; }
+          else               { transcIdx = 8; }
+        }
+      }
+      elixAIdx = transcIdx + 1;
+      elixBIdx = transcIdx + 2;
     } else {
-      // fallback
-      if (hasAdvEnhance) { transcIdx = 9;  elixAIdx = 10; elixBIdx = 11; }
-      else                { transcIdx = 8;  elixAIdx = 9;  elixBIdx = 10; }
+      if (type8 === "progress") {
+        if (hasAdvEnhance) { transcIdx = 9; elixAIdx = 10; elixBIdx = 11; }
+        else               { transcIdx = 8; elixAIdx = 9;  elixBIdx = 10; }
+      } else if (type8 === "IndentStringGroup") {
+        transcIdx = 8; elixAIdx = 9; elixBIdx = 10;
+      } else {
+        if (hasAdvEnhance) { transcIdx = 9; elixAIdx = 10; elixBIdx = 11; }
+        else               { transcIdx = 8; elixAIdx = 9;  elixBIdx = 10; }
+      }
     }
 
     const idxKey = (n) => `Element_${String(n).padStart(3, "0")}`;

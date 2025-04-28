@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="css/character.css" />
   <link rel="stylesheet" href="css/database.css" />
   <link rel="stylesheet" href="css/roster.css" />
+  <link rel="stylesheet" href="css/crtDealShare.css" />
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
@@ -28,6 +29,9 @@
   <script defer src="js/loadCharacter/updateCharacterAccessary.js"></script>
   <script defer src="js/loadCharacter/updateOtherInformation.js"></script>
 
+  <!-- 캐릭터 딜지분 설정 -->
+  <script defer src="js/crtDealShare/updateCharacterDealShare.js"></script>
+
   <!-- 디버깅 -->
   <script defer src="js/debug/test.js"></script>
 </head>
@@ -41,7 +45,8 @@
     <div class="top-bar">
       <div class="tab active" data-tab="efficiency">효율표</div>
       <div class="tab" data-tab="roster">로펙점수</div>
-      <div class="tab" data-tab="character">캐릭설정</div>
+      <div class="tab" data-tab="deal">딜증 효율</div>
+      <div class="tab" data-tab="character">캐릭터 딜지분 설정</div>
       <div class="tab" data-tab="database">Database</div>
       <div class="apikey-wrapper">
         <label for="apikey">APIKey</label>
@@ -65,9 +70,25 @@
     <!-- 로펙점수 탭 -->
     <div class="tab-content" id="content-roster" style="display:none;"></div>
 
-    <!-- 캐릭설정 탭 -->
-    <div class="tab-content" id="content-character" style="display:none;"></div>
+    <!-- 딜증효율 탭 -->
+    <div class="tab-content" id="content-deal" style="display:none;"></div>
 
+    <!-- 캐릭설정 탭 -->
+    <div class="tab-content" id="content-character" style="display:none;">
+      <div style="display:flex; width:100%; align-items:flex-start;">
+        <!-- 왼쪽: 스킬-딜지분 테이블 -->
+        <div id="crt-deal-share-table-wrapper"></div>
+        <!-- 오른쪽 상단: 업로드 버튼 -->
+        <div style="flex:1; display:flex; justify-content:flex-end;">
+          <button id="btn-upload-deal-share"
+                  class="update-btn"
+                  onclick="updateCharacterDealShare()">
+            업로드
+          </button>
+        </div>
+      </div>
+    </div>
+    
     <!-- Database 탭 -->
     <div class="tab-content" id="content-database" style="display:none;">
       <div class="data-group">
@@ -94,6 +115,7 @@
           </div>
         </div>
       </div>
+
       <hr class="market-separator" />
       <div id="bottom-sections">
         <div class="accessory-section">
@@ -101,14 +123,32 @@
             <h3 class="group-title">딜러 악세서리</h3>
             <button id="btn-update-dealer" class="update-btn">업데이트</button>
           </div>
+          <div class="allow-count-selector">
+              최소 잔여 거래:
+              <label><input type="radio" name="dealer-neck-allow" value="0" checked>0</label>
+              <label><input type="radio" name="dealer-neck-allow" value="1">1</label>
+              <label><input type="radio" name="dealer-neck-allow" value="2">2</label>
+          </div>
           <div class="data-table">
             <h4>🔗 목걸이</h4>
             <table id="tbl-dealer-neck"></table>
           </div>
+          <div class="allow-count-selector">
+            최소 잔여 거래:
+            <label><input type="radio" name="dealer-ear-allow" value="0" checked>0</label>
+            <label><input type="radio" name="dealer-ear-allow" value="1">1</label>
+            <label><input type="radio" name="dealer-ear-allow" value="2">2</label>
+        </div>
           <div class="data-table">
             <h4>🧿 귀걸이</h4>
             <table id="tbl-dealer-ear"></table>
           </div>
+          <div class="allow-count-selector">
+            최소 잔여 거래:
+            <label><input type="radio" name="dealer-ring-allow" value="0" checked>0</label>
+            <label><input type="radio" name="dealer-ring-allow" value="1">1</label>
+            <label><input type="radio" name="dealer-ring-allow" value="2">2</label>
+        </div>
           <div class="data-table">
             <h4>💍 반지</h4>
             <table id="tbl-dealer-ring"></table>
@@ -119,14 +159,32 @@
             <h3 class="group-title">서포터 악세서리</h3>
             <button id="btn-update-support" class="update-btn">업데이트</button>
           </div>
+          <div class="allow-count-selector">
+            최소 잔여 거래:
+            <label><input type="radio" name="support-neck-allow" value="0" checked>0</label>
+            <label><input type="radio" name="support-neck-allow" value="1">1</label>
+            <label><input type="radio" name="support-neck-allow" value="2">2</label>
+        </div>
           <div class="data-table">
             <h4>🔗 목걸이</h4>
             <table id="tbl-support-neck"></table>
           </div>
+          <div class="allow-count-selector">
+            최소 잔여 거래:
+            <label><input type="radio" name="support-ear-allow" value="0" checked>0</label>
+            <label><input type="radio" name="support-ear-allow" value="1">1</label>
+            <label><input type="radio" name="support-ear-allow" value="2">2</label>
+        </div>
           <div class="data-table">
             <h4>🧿 귀걸이</h4>
             <table id="tbl-support-ear"></table>
           </div>
+          <div class="allow-count-selector">
+            최소 잔여 거래:
+            <label><input type="radio" name="support-ring-allow" value="0" checked>0</label>
+            <label><input type="radio" name="support-ring-allow" value="1">1</label>
+            <label><input type="radio" name="support-ring-allow" value="2">2</label>
+        </div>
           <div class="data-table">
             <h4>💍 반지</h4>
             <table id="tbl-support-ring"></table>

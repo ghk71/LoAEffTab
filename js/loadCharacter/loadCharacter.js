@@ -90,7 +90,7 @@ const utils = {
     const m = t.match(/\[초월\].*?(\d+)\D+(\d+)/);
     return m ? `${m[1]} | ${m[2]}` : "-";
   },
-  extractGrade: s => (utils.stripTags(s).match(/(고대|유물)/) || [])[1] || "-",
+  extractGrade: s => (utils.stripTags(s).match(/(고대|유물|에스더)/) || [])[1] || "-",
   extractElixirText: s => {
     const t = utils.stripTags(s);
     const n = t.match(/(.+?)\s*Lv\.\d+/);
@@ -208,6 +208,9 @@ async function loadCharacterInformation() {
     updateCharacterAccessary(data.ArmoryEquipment || []);
     updateOtherInformation(data);
 
+    document.getElementById("efficiency-table-wrapper").style.display = "block";
+
+    renderDealShareTable();
   } catch (e) {
     console.error(e);
   } finally {
