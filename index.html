@@ -1,224 +1,114 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>로아 효율표 시스템</title>
-  <link rel="stylesheet" href="css/main.css" />
-  <link rel="stylesheet" href="css/efficiency.css" />
-  <link rel="stylesheet" href="css/character.css" />
-  <link rel="stylesheet" href="css/database.css" />
-  <link rel="stylesheet" href="css/roster.css" />
-  <link rel="stylesheet" href="css/crtDealShare.css" />
+<meta charset="UTF-8">
+<title>로아 효율표</title>
+<style>
+  /* 1) 박스 사이징 통일 */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  html, body {
+    height: 100vh;
+    margin: 0; padding: 0;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0d4f66, #003f5c, #00546e, #0d4f66);
+    background-size: 400% 400%;
+    animation: bgAnim 15s ease infinite;
+    font-family: 'Pretendard', sans-serif;
+    color: #fff;
+  }
+  @keyframes bgAnim {
+    0%   { background-position: 0%   50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0%   50%; }
+  }
 
-  <!-- 가격 업데이트 -->
-  <script defer src="js/updatePrice/updatePrice.js"></script>
-  <script defer src="js/updatePrice/updateMarketItems.js"></script>
-  <script defer src="js/updatePrice/updateGems.js"></script>
-  <script defer src="js/updatePrice/updateDealerAcc.js"></script>
-  <script defer src="js/updatePrice/updateSupportAcc.js"></script>
+  /* 2) 카드 폭을 좀 넉넉히, 패딩도 조정 */
+  .search-box {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;           /*→ 여기만 360px로 넉넉히 늘려줌*/
+    padding: 24px;          /*→ 패딩도 균일하게 24px */
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    backdrop-filter: blur(12px);
+    text-align: center;
+  }
+  .search-box h1 {
+    margin: 0 0 24px;
+    font-size: 22px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  }
 
-  <!-- 효율표 -->
-  <script defer src="js/efficiency/efficiencyTable.js"></script>
+  /* 3) 입력창·버튼 폭 100% + box-sizing:border-box */
+  .search-box input,
+  .search-box button {
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    transition: .2s;
+  }
+  .search-box input {
+    padding: 12px;
+    margin-bottom: 18px;
+    font-size: 15px;
+    background: rgba(255,255,255,0.3);
+    color: #fff;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .search-box input::placeholder {
+    color: rgba(255,255,255,0.8);
+  }
+  .search-box input:focus {
+    background: rgba(255,255,255,0.4);
+    outline: none;
+    transform: scale(1.02);
+  }
 
-  <!-- 캐릭터 로드 -->
-  <script defer src="js/loadCharacter/loadCharacter.js"></script>
-  <script defer src="js/loadCharacter/updateCharacter.js"></script>
-  <script defer src="js/loadCharacter/updateCharacterEquipment.js"></script>
-  <script defer src="js/loadCharacter/updateCharacterAccessary.js"></script>
-  <script defer src="js/loadCharacter/updateOtherInformation.js"></script>
-
-  <!-- 캐릭터 딜지분 설정 -->
-  <script defer src="js/crtDealShare/updateCharacterDealShare.js"></script>
-
-  <!-- 디버깅 -->
-  <script defer src="js/debug/test.js"></script>
+  .search-box button {
+    padding: 12px 0;
+    font-size: 16px;
+    background: linear-gradient(135deg, #ff5a5a, #ff3b3b);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  }
+  .search-box button:hover {
+    background: linear-gradient(135deg, #ff7070, #ff4b4b);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  }
+  .search-box button:active {
+    transform: translateY(0);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+  }
+</style>
 </head>
 <body>
-  <div id="app">
-    <h1 class="title">로아 효율표 시스템</h1>
-
-    <button onclick="Debugging();">디버깅</button>
-
-    <!-- Top Bar -->
-    <div class="top-bar">
-      <div class="tab active" data-tab="efficiency">효율표</div>
-      <div class="tab" data-tab="roster">로펙점수</div>
-      <div class="tab" data-tab="deal">딜증 효율</div>
-      <div class="tab" data-tab="character">캐릭터 딜지분 설정</div>
-      <div class="tab" data-tab="database">Database</div>
-      <div class="apikey-wrapper">
-        <label for="apikey">APIKey</label>
-        <input id="apikey" type="text" placeholder="여기에 입력" />
-      </div>
-    </div>
-
-    <!-- 효율표 탭 -->
-    <div class="tab-content" id="content-efficiency">
-      <div id="character-panel">
-        <div class="character-search">
-          <label for="charName">캐릭터명</label>
-          <input id="charName" type="text" />
-          <button id="charactherBtn" onclick="loadCharacterInformation()">검색</button>
-        </div>
-        <div class="character-stats" id="characterStats"></div>
-      </div>
-      <div id="efficiency-table-wrapper"></div>
-    </div>
-
-    <!-- 로펙점수 탭 -->
-    <div class="tab-content" id="content-roster" style="display:none;"></div>
-
-    <!-- 딜증효율 탭 -->
-    <div class="tab-content" id="content-deal" style="display:none;"></div>
-
-    <!-- 캐릭설정 탭 -->
-    <div class="tab-content" id="content-character" style="display:none;">
-      <div style="display:flex; width:100%; align-items:flex-start;">
-        <!-- 왼쪽: 스킬-딜지분 테이블 -->
-        <div id="crt-deal-share-table-wrapper"></div>
-        <!-- 오른쪽 상단: 업로드 버튼 -->
-        <div style="flex:1; display:flex; justify-content:flex-end;">
-          <button id="btn-upload-deal-share"
-                  class="update-btn"
-                  onclick="updateCharacterDealShare()">
-            업로드
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Database 탭 -->
-    <div class="tab-content" id="content-database" style="display:none;">
-      <div class="data-group">
-        <div class="group-header">
-          <h3 class="group-title">시장 가격</h3>
-          <button id="btn-update-all" class="update-btn">Update Price</button>
-        </div>
-        <div id="top-categories">
-          <div class="data-table">
-            <h4>📦 재료</h4>
-            <table id="tbl-materials"></table>
-          </div>
-          <div class="data-table">
-            <h4>📜 딜러 각인서</h4>
-            <table id="tbl-dealer-engrave"></table>
-          </div>
-          <div class="data-table">
-            <h4>📜 서포터 각인서</h4>
-            <table id="tbl-support-engrave"></table>
-          </div>
-          <div class="data-table">
-            <h4>💎 보석</h4>
-            <table id="tbl-gems"></table>
-          </div>
-        </div>
-      </div>
-
-      <hr class="market-separator" />
-      <div id="bottom-sections">
-        <div class="accessory-section">
-          <div class="group-header">
-            <h3 class="group-title">딜러 악세서리</h3>
-            <button id="btn-update-dealer" class="update-btn">업데이트</button>
-          </div>
-          <div class="allow-count-selector">
-              최소 잔여 거래:
-              <label><input type="radio" name="dealer-neck-allow" value="0" checked>0</label>
-              <label><input type="radio" name="dealer-neck-allow" value="1">1</label>
-              <label><input type="radio" name="dealer-neck-allow" value="2">2</label>
-          </div>
-          <div class="data-table">
-            <h4>🔗 목걸이</h4>
-            <table id="tbl-dealer-neck"></table>
-          </div>
-          <div class="allow-count-selector">
-            최소 잔여 거래:
-            <label><input type="radio" name="dealer-ear-allow" value="0" checked>0</label>
-            <label><input type="radio" name="dealer-ear-allow" value="1">1</label>
-            <label><input type="radio" name="dealer-ear-allow" value="2">2</label>
-        </div>
-          <div class="data-table">
-            <h4>🧿 귀걸이</h4>
-            <table id="tbl-dealer-ear"></table>
-          </div>
-          <div class="allow-count-selector">
-            최소 잔여 거래:
-            <label><input type="radio" name="dealer-ring-allow" value="0" checked>0</label>
-            <label><input type="radio" name="dealer-ring-allow" value="1">1</label>
-            <label><input type="radio" name="dealer-ring-allow" value="2">2</label>
-        </div>
-          <div class="data-table">
-            <h4>💍 반지</h4>
-            <table id="tbl-dealer-ring"></table>
-          </div>
-        </div>
-        <div class="accessory-section">
-          <div class="group-header">
-            <h3 class="group-title">서포터 악세서리</h3>
-            <button id="btn-update-support" class="update-btn">업데이트</button>
-          </div>
-          <div class="allow-count-selector">
-            최소 잔여 거래:
-            <label><input type="radio" name="support-neck-allow" value="0" checked>0</label>
-            <label><input type="radio" name="support-neck-allow" value="1">1</label>
-            <label><input type="radio" name="support-neck-allow" value="2">2</label>
-        </div>
-          <div class="data-table">
-            <h4>🔗 목걸이</h4>
-            <table id="tbl-support-neck"></table>
-          </div>
-          <div class="allow-count-selector">
-            최소 잔여 거래:
-            <label><input type="radio" name="support-ear-allow" value="0" checked>0</label>
-            <label><input type="radio" name="support-ear-allow" value="1">1</label>
-            <label><input type="radio" name="support-ear-allow" value="2">2</label>
-        </div>
-          <div class="data-table">
-            <h4>🧿 귀걸이</h4>
-            <table id="tbl-support-ear"></table>
-          </div>
-          <div class="allow-count-selector">
-            최소 잔여 거래:
-            <label><input type="radio" name="support-ring-allow" value="0" checked>0</label>
-            <label><input type="radio" name="support-ring-allow" value="1">1</label>
-            <label><input type="radio" name="support-ring-allow" value="2">2</label>
-        </div>
-          <div class="data-table">
-            <h4>💍 반지</h4>
-            <table id="tbl-support-ring"></table>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="search-box">
+    <h1>캐릭터 검색</h1>
+    <input id="charName" type="text" placeholder="캐릭터명 입력">
+    <button id="searchBtn">검색</button>
   </div>
 
   <script>
-    // 탭 전환
-    const tabs = document.querySelectorAll('.tab');
-    const contents = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        contents.forEach(c => c.style.display = 'none');
-        tab.classList.add('active');
-        document.getElementById(`content-${tab.dataset.tab}`).style.display = 'flex';
-      });
-    });
-    // APIKey 저장
-    const apikeyInput = document.getElementById('apikey');
-    apikeyInput.value = localStorage.getItem('supabase_apikey') || '';
-    apikeyInput.addEventListener('input', () =>
-      localStorage.setItem('supabase_apikey', apikeyInput.value)
-    );
-
+    const go = () => {
+      const name = document.getElementById('charName').value.trim();
+      if (!name) return alert('캐릭터명을 입력하세요.');
+      window.location.href = `main.html?charName=${encodeURIComponent(name)}`;
+    };
+    document.getElementById('searchBtn').addEventListener('click', go);
     document.getElementById('charName')
-    .addEventListener('keydown', function(e) {
-      if (e.key === 'Enter') {
-        loadCharacterInformation();
-      }
-    });
+      .addEventListener('keydown', e => e.key==='Enter' && go());
   </script>
 </body>
 </html>

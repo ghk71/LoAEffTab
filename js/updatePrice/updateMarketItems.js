@@ -96,11 +96,11 @@ async function updateMarketPrices() {
 
       page++;
     }
-    engraves.forEach(({ Name, YDayAvgPrice }) => {
+    engraves.forEach(({ Name, RecentPrice }) => {
       const d = dealerEngravingData.find(e => e.name === Name);
-      if (d) d.price = YDayAvgPrice;
+      if (d) d.price = RecentPrice;
       const s = supportEngravingData.find(e => e.name === Name);
-      if (s) s.price = YDayAvgPrice;
+      if (s) s.price = RecentPrice;
     });
 
     // 렌더
